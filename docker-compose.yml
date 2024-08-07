@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  store-service:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgresql
+    environment:
+      - DATABASE_URL=postgresql://user:password@postgresql:5432/store_db?schema=public
+      - NODE_ENV=development
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./prisma:/usr/src/app/prisma
+  postgresql:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=store_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

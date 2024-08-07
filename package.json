@@ -1,0 +1,30 @@
+{
+  "name": "ravn-challenge",
+  "version": "1.0.0",
+  "description": "API for an sports store",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only --watch src src/server.ts",
+    "build": "tsc",
+    "migrate": "npx prisma migrate deploy",
+    "migrate:dev": "npx prisma migrate dev --name init",
+    "test": "jest"
+  },
+  "author": "Sergio Laureano",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "awilix": "^10.0.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.1.0",
+    "prisma": "^5.18.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.4"
+  }
+}
