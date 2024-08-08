@@ -2,7 +2,7 @@ import { UseCase } from "../../../common/contracts/UseCase";
 import { UserRepository } from "../contracts/UserRepository";
 import { UserEntity } from "../entities/UserEntity";
 
-export class GetAllUsersUseCase implements UseCase<null, UserEntity[]>{
+export class GetAllUsersUseCase implements UseCase<void, UserEntity[]> {
   private userRepository: UserRepository;
 
   constructor(userRepository: UserRepository) {

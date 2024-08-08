@@ -9,6 +9,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://user:password@postgresql:5432/store_db?schema=public
       - NODE_ENV=development
+      - APP_SECRET_KEY=83ca8b3e-49bc-4fec-b098-ed22568ec68c
     volumes:
       - ./src:/usr/src/app/src
       - ./prisma:/usr/src/app/prisma

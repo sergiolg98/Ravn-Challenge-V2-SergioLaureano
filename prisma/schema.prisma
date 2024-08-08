@@ -25,13 +25,14 @@ enum OrderStatus {
 }
 
 model User {
-  id     Int        @id @default(autoincrement())
-  name   String
-  email  String     @unique
-  role   Role       @default(CLIENT)
-  orders Order[]
-  cart   CartItem[]
-  likes  Like[]
+  id       Int        @id @default(autoincrement())
+  name     String
+  email    String     @unique
+  password String
+  role     Role       @default(CLIENT)
+  orders   Order[]
+  cart     CartItem[]
+  likes    Like[]
 }
 
 model Product {
@@ -39,7 +40,7 @@ model Product {
   name        String
   description String
   price       Float
-  isDisabled  Boolean     @default(false)
+  active      Boolean     @default(true)
   images      Image[]
   orderItems  OrderItem[]
   cartItems   CartItem[]
