@@ -7,6 +7,9 @@ import { AuthenticateUserUseCase } from '../core/contexts/user/usecases/Authenti
 import { PostgresProductRepository } from '../infrastructure/repositories/postgresql/PostgresProductRepository';
 import { CreateProductUseCase } from '../core/contexts/product/usecases/CreateProductUseCase';
 import { ProductController } from '../routes/product/ProductController';
+import { ImageController } from '../routes/product/ImageController';
+import { PostgresImageRepository } from '../infrastructure/repositories/postgresql/PostgresImageRepository';
+import { UploadImagesUseCase } from '../core/contexts/product/usecases/UploadImagesUseCase';
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC
@@ -23,6 +26,10 @@ container.register({
   productController: asClass(ProductController).singleton(),
   productRepository: asClass(PostgresProductRepository).singleton(),
   CreateProductUseCase: asClass(CreateProductUseCase).singleton(),
+  // Image
+  imageController: asClass(ImageController).singleton(),
+  imageRepository: asClass(PostgresImageRepository).singleton(),
+  UploadImagesUseCase: asClass(UploadImagesUseCase).singleton(),
 });
 
 export { container };
