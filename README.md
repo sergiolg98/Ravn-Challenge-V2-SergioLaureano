@@ -18,8 +18,16 @@
 ## Instructions to run 
 
 (Important) Be sure to have Docker installed on your machine first.
-- Clone the project
-- Run the command to build the containers. The project is ready to run the basic migrations.
+After you have the project in your machine:
+
+1. Install dependencies with ``` npm install ```
+2. Change permissions of localstack init file.
+
+```sh
+chmod +x ./.localstack/.init/buckets.sh
+```
+
+3. Build up the containers. The project is ready to run the migrations for Postgres DB and seeds basic data.
 ```sh
 docker-compose up --build -d
 ```

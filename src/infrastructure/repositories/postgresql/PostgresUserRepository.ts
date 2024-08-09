@@ -1,6 +1,5 @@
 import { UserRepository } from "../../../core/contexts/user/contracts/UserRepository";
 import { UserEntity } from "../../../core/contexts/user/entities/UserEntity";
-import { Role } from "../../../core/contexts/user/constants/roles";
 import { PrismaClient } from "@prisma/client";
 
 export class PostgresUserRepository implements UserRepository {

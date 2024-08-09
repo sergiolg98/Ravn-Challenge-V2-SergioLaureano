@@ -7,4 +7,4 @@ COPY prisma ./prisma/
 
 COPY . .
 
-CMD [ "sh", "-c", "npm install && npm run migrate:dev && npm run dev" ]
+CMD [ "sh", "-c", "npm install && npm run migrate:dev && npm run seed && npm run dev" ]
