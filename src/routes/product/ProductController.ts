@@ -26,9 +26,10 @@ export class ProductController {
       description,
       price,
       active,
+      stock,
       categoryId,
     } = req.body;
-    const product: ProductEntity = { name, description, price, active, categoryId };
+    const product: ProductEntity = { name, description, price, active, stock, categoryId };
     const response = await this.CreateProductUseCase.execute(product);
     res.status(201).json(response);
   }
@@ -39,13 +40,15 @@ export class ProductController {
       description,
       price,
       active,
+      stock,
     } = req.body;
 
     const product: UpdateProductEntity = {
       name,
       description,
       price,
-      active
+      active,
+      stock,
     };
     const { productId }: any = req.params;
     const response = await this.UpdateProductUseCase.execute(productId, product);

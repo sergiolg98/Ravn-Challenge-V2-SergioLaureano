@@ -4,6 +4,7 @@ export interface ProductEntity {
   description?: string,
   price: number,
   active: boolean,
+  stock: number,
   categoryId: number,
 }
 
@@ -12,4 +13,5 @@ export interface UpdateProductEntity {
   description?: string,
   price?: number,
   active?: boolean,
+  stock?: number,
 }

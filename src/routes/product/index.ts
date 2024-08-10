@@ -4,12 +4,11 @@ import { ImageController } from './ImageController';
 import { ProductController } from './ProductController';
 import { authenticate } from '../../infrastructure/middlewares/auth';
 import { Role } from '../../core/contexts/user/constants/roles';
-import multer from 'multer';
+import { uploadMiddleware } from '../../infrastructure/middlewares/multer';
 
 const router = Router();
 const productController = container.resolve<ProductController>('productController');
 const imageController = container.resolve<ImageController>('imageController');
-const upload = multer({ storage: multer.memoryStorage() });
 
 // PUBLIC ENDPOINTS
 router.get(
@@ -55,7 +54,7 @@ router.put(
 router.post(
   '/:productId/upload-images',
   // authenticate(Role.MANAGER),
-  upload.array("images", 3), // max 3 images
+  uploadMiddleware.array("images", 3), // max 3 images
   (req, res) => imageController.upload(req, res),
 );
 

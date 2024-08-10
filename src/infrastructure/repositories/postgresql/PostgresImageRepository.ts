@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { s3Client } from "../../../config/aws";
 import { InternalServerError } from "../../../core/common/errors/InternalServerError";
-import { ImageEntity } from "../../../core/contexts/product/entities/ImageEntity";
+import { ImageEntity, UploadFile } from "../../../core/contexts/product/entities/ImageEntity";
 import { ImageRepository } from "../../../core/contexts/product/contracts/ImageRepository";
 
 export class PostgresImageRepository implements ImageRepository {
@@ -12,7 +12,7 @@ export class PostgresImageRepository implements ImageRepository {
     this.prisma = new PrismaClient();
   }
 
-  async upload(files: any[], productId: number): Promise<ImageEntity[]> {
+  async upload(files: UploadFile[], productId: number): Promise<ImageEntity[]> {
     const imagesUploaded: ImageEntity[] = [];
     for (const image of files) {
       const key = `products/${productId}/${Date.now()}-${image.originalname}`;

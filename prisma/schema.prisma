@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["relationJoins"]
 }
 
@@ -48,6 +48,7 @@ model Product {
   description String?
   price       Float
   active      Boolean     @default(true)
+  stock       Int         @default(0)
   category    Category    @relation(fields: [categoryId], references: [id])
   categoryId  Int
   images      Image[]

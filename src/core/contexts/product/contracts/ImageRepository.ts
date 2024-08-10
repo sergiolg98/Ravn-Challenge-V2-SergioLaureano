@@ -1,7 +1,7 @@
-import { ImageEntity } from "../entities/ImageEntity";
+import { ImageEntity, UploadFile } from "../entities/ImageEntity";
 
 export interface ImageRepository {
-  upload(files: File[], productId: number): Promise<ImageEntity[]>;
+  upload(files: UploadFile[], productId: number): Promise<ImageEntity[]>;
   deleteByProductId(productId: number): Promise<void>;
 }
 
