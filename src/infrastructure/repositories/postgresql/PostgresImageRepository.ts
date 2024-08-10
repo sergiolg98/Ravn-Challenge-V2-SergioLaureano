@@ -41,4 +41,14 @@ export class PostgresImageRepository implements ImageRepository {
     }
     return imagesUploaded;
   }
+
+  async deleteByProductId(productId: number): Promise<void> {
+    const imagesDeleted = await this.prisma.image.deleteMany({
+      where: {
+        productId: Number(productId),
+      }
+    });
+    console.log(' > Images DB deleted: ', imagesDeleted);
+    return;
+  }
 }

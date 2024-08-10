@@ -6,3 +6,10 @@ export interface ProductEntity {
   active: boolean,
   categoryId: number,
 }
+
+export interface UpdateProductEntity {
+  name?: string,
+  description?: string,
+  price?: number,
+  active?: boolean,
+}

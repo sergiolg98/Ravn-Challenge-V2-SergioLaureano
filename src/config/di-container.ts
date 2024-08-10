@@ -10,6 +10,12 @@ import { ProductController } from '../routes/product/ProductController';
 import { ImageController } from '../routes/product/ImageController';
 import { PostgresImageRepository } from '../infrastructure/repositories/postgresql/PostgresImageRepository';
 import { UploadImagesUseCase } from '../core/contexts/product/usecases/UploadImagesUseCase';
+import { DeleteProductUseCase } from '../core/contexts/product/usecases/DeleteProductUseCase';
+import { DisableProductUseCase } from '../core/contexts/product/usecases/DisableProductUseCase';
+import { FindAllProductsUseCase } from '../core/contexts/product/usecases/FindAllProductsUseCase';
+import { FindProductByIdUseCase } from '../core/contexts/product/usecases/FindProductByIdUseCase';
+import { FindProductsByCategoryIdUseCase } from '../core/contexts/product/usecases/FindProductsByCategoryIdUseCase';
+import { UpdateProductUseCase } from '../core/contexts/product/usecases/UpdateProductUseCase';
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC
@@ -26,6 +32,12 @@ container.register({
   productController: asClass(ProductController).singleton(),
   productRepository: asClass(PostgresProductRepository).singleton(),
   CreateProductUseCase: asClass(CreateProductUseCase).singleton(),
+  UpdateProductUseCase: asClass(UpdateProductUseCase).singleton(), 
+  FindAllProductsUseCase: asClass(FindAllProductsUseCase).singleton(),
+  FindProductByIdUseCase: asClass(FindProductByIdUseCase).singleton(),
+  FindProductsByCategoryIdUseCase: asClass(FindProductsByCategoryIdUseCase).singleton(),
+  DeleteProductUseCase: asClass(DeleteProductUseCase).singleton(),
+  DisableProductUseCase: asClass(DisableProductUseCase).singleton(),
   // Image
   imageController: asClass(ImageController).singleton(),
   imageRepository: asClass(PostgresImageRepository).singleton(),
