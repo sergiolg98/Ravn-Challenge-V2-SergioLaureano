@@ -14,4 +14,17 @@ router.post(
   (req, res) => orderController.create(req, res),
 );
 
+router.get(
+  '/:orderId',
+  authenticate(Role.CLIENT),
+  (req, res) => orderController.findById(req, res),
+);
+
+// MANAGER ENDPOINTS
+router.get(
+  '/by-client/:userId',
+  authenticate(Role.MANAGER),
+  (req, res) => orderController.findByUserId(req, res),
+);
+
 export default router;

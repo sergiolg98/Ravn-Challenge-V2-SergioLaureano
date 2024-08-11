@@ -21,6 +21,8 @@ import { AddProductToCartUseCase } from '../core/contexts/product/usecases/AddPr
 import { OrderController } from '../infrastructure/http/controllers/OrderController';
 import { PostgresOrderRepository } from '../infrastructure/repositories/postgresql/PostgresOrderRepository';
 import { CreateOrderUseCase } from '../core/contexts/order/usecases/CreateOrderUseCase';
+import { FindOrderByIdUseCase } from '../core/contexts/order/usecases/FindOrderByIdUseCase';
+import { FindOrdersByUserIdUseCase } from '../core/contexts/order/usecases/FindOrdersByUserIdUseCase';
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC
@@ -53,6 +55,8 @@ container.register({
   orderController: asClass(OrderController).singleton(),
   orderRepository: asClass(PostgresOrderRepository).singleton(),
   CreateOrderUseCase: asClass(CreateOrderUseCase).singleton(),
+  FindOrderByIdUseCase: asClass(FindOrderByIdUseCase).singleton(),
+  FindOrdersByUserIdUseCase: asClass(FindOrdersByUserIdUseCase).singleton(),
 });
 
 export { container };

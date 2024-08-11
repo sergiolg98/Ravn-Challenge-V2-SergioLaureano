@@ -2,8 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { ProductEntity } from "../../../core/contexts/product/entities/ProductEntity";
 import { ProductRepository } from "../../../core/contexts/product/contracts/ProductRepository";
 import { PaginationParams, Pagination } from "../../../core/common/entities/Entity";
-import { DEFAULT_LIMIT, MAX_LIMIT } from "./values";
 import { BadRequestError } from "../../../core/common/errors/BadRequestError";
+import { PaginationHelper } from "./helpers";
 
 export class PostgresProductRepository implements ProductRepository {
   private prisma: PrismaClient;
@@ -65,8 +65,8 @@ export class PostgresProductRepository implements ProductRepository {
   }
 
   async findAll(params: PaginationParams): Promise<Pagination<ProductEntity>> {
-    const limit: number = this.validateLimit(params.limit);
-    const page: number = this.getPage(limit, params.page);
+    const limit: number = PaginationHelper.validateLimit(params.limit);
+    const page: number = PaginationHelper.getPage(limit, params.page);
     const products = await this.prisma.product.findMany({
       skip: Number(page),
       take: Number(limit),
@@ -89,8 +89,8 @@ export class PostgresProductRepository implements ProductRepository {
     categoryId: number,
     params: PaginationParams,
   ): Promise<Pagination<ProductEntity>> {
-    const limit: number = this.validateLimit(params.limit);
-    const page: number = this.getPage(limit, params.page);
+    const limit: number = PaginationHelper.validateLimit(params.limit);
+    const page: number = PaginationHelper.getPage(limit, params.page);
     const products = await this.prisma.product.findMany({
       skip: page,
       take: limit,
@@ -146,19 +146,5 @@ export class PostgresProductRepository implements ProductRepository {
       }
     });
     return addedItem;
-  }
-
-  private validateLimit(initialLimit?: number): number {
-    if (!initialLimit) return DEFAULT_LIMIT;
-    return (initialLimit > 0 && initialLimit <= MAX_LIMIT) ? initialLimit : DEFAULT_LIMIT;
-  }
-
-  private getPage(limit: number, page?: number): number {
-    let currentPage: number = 0;
-    if (page !== null && page !== undefined) {
-      currentPage = page - 1; // Si pide la pag 1 => 0*4 = 0 de skip
-      currentPage = currentPage * limit;
-    }
-    return currentPage;
   }
 }

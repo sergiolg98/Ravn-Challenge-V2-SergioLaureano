@@ -1,5 +1,5 @@
 export interface OrderEntity {
-  createdAt: string,
+  createdAt: Date,
   status: string,
   userId: number,
   items: OrderItemEntity[],
