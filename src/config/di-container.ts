@@ -23,6 +23,8 @@ import { PostgresOrderRepository } from '../infrastructure/repositories/postgres
 import { CreateOrderUseCase } from '../core/contexts/order/usecases/CreateOrderUseCase';
 import { FindOrderByIdUseCase } from '../core/contexts/order/usecases/FindOrderByIdUseCase';
 import { FindOrdersByUserIdUseCase } from '../core/contexts/order/usecases/FindOrdersByUserIdUseCase';
+import { SignOutUserUseCase } from '../core/contexts/user/usecases/SignOutUserUseCase';
+import { RedisTokenManagementRepository } from '../infrastructure/repositories/redis/RedisTokenManagementRepository';
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC
@@ -32,9 +34,11 @@ container.register({
   // User
   userController: asClass(UserController).singleton(),
   userRepository: asClass(PostgresUserRepository).singleton(),
+  tokenManagementRepository: asClass(RedisTokenManagementRepository).singleton(),
   GetAllUsersUseCase: asClass(GetAllUsersUseCase).singleton(),
   RegisterUserUseCase: asClass(RegisterUserUseCase).singleton(),
   AuthenticateUserUseCase: asClass(AuthenticateUserUseCase).singleton(),
+  SignOutUserUseCase: asClass(SignOutUserUseCase).singleton(),
   // Product
   productController: asClass(ProductController).singleton(),
   productRepository: asClass(PostgresProductRepository).singleton(),

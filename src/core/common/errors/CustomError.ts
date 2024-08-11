@@ -13,7 +13,7 @@ export abstract class CustomError extends Error {
     super(message);
   }
 
-  serializeErrors(): { errorType: CustomErrorType, message: string } {
+  serializeErrors(): { status: number, errorType: CustomErrorType, message: string } {
     const errorObject = {
       status: this.statusCode,
       errorType: this.errorType,

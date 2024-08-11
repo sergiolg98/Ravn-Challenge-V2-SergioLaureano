@@ -6,6 +6,7 @@ services:
       - "3000:3000"
     depends_on:
       - postgresql
+      - redis
     environment:
       - DATABASE_URL=postgresql://user:password@postgresql:5432/store_db?schema=public
       - NODE_ENV=development
@@ -14,6 +15,9 @@ services:
       - AWS_REGION=us-east-1
       - AWS_ACCESS_KEY_ID=user_aws_test
       - AWS_SECRET_ACCESS_KEY=secret_aws_test
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis
+      - JWT_TOKEN_DURATION_TIME=1h
     volumes:
       - ./src:/usr/src/app/src
       - ./prisma:/usr/src/app/prisma
@@ -42,6 +46,12 @@ services:
       - './.localstack:/var/lib/localstack'
       - './.localstack/.init/:/etc/localstack/init/ready.d/'
       - '/var/run/docker.sock:/var/run/docker.sock'
-      
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
 volumes:
   postgres_data:
+  redis-data:

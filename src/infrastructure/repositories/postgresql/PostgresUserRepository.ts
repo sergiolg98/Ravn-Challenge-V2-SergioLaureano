@@ -26,6 +26,7 @@ export class PostgresUserRepository implements UserRepository {
     });
     return createdUser as UserEntity;
   }
+
   async findById(id: number): Promise<UserEntity | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },

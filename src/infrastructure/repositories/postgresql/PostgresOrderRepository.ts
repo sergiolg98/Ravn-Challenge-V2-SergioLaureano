@@ -3,7 +3,7 @@ import { BadRequestError } from "../../../core/common/errors/BadRequestError";
 import { OrderStatus } from "../../../core/contexts/order/constants/status";
 import { OrderRepository } from "../../../core/contexts/order/contracts/OrderRepository";
 import { OrderEntity } from "../../../core/contexts/order/entities/OrderEntity";
-import { CartItem, Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { PaginationHelper } from "./helpers";
 
 export class PostgresOrderRepository implements OrderRepository {

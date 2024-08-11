@@ -23,7 +23,7 @@ export class AuthenticateUserUseCase implements UseCase<UserCredentials, AuthRes
     const token: string = jwt.sign(
       { id: user.id! },
       process.env.APP_SECRET_KEY!,
-      { expiresIn: '1h' },
+      { expiresIn: process.env.JWT_TOKEN_DURATION_TIME! },
     );
     return {
       user,
