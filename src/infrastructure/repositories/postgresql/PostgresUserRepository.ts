@@ -1,14 +1,14 @@
-import { UserRepository } from "../../../core/contexts/user/contracts/UserRepository";
-import { UserEntity } from "../../../core/contexts/user/entities/UserEntity";
-import { PrismaClient } from "@prisma/client";
+import { UserRepository } from '../../../core/contexts/user/contracts/UserRepository';
+import { UserEntity } from '../../../core/contexts/user/entities/UserEntity';
+import { PrismaClient } from '@prisma/client';
 
 export class PostgresUserRepository implements UserRepository {
   private prisma: PrismaClient;
 
-  constructor(){
+  constructor() {
     this.prisma = new PrismaClient();
   }
-  
+
   // Only informative, to delete later
   async getAll(): Promise<UserEntity[]> {
     const users = await this.prisma.user.findMany();
@@ -31,15 +31,13 @@ export class PostgresUserRepository implements UserRepository {
     const user = await this.prisma.user.findUnique({
       where: { id },
     });
-    return user as UserEntity ?? null;
+    return (user as UserEntity) ?? null;
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
-    return user as UserEntity ?? null;
+    return (user as UserEntity) ?? null;
   }
-
 }
-

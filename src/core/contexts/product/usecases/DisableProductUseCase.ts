@@ -1,6 +1,6 @@
-import { UseCase } from "../../../common/contracts/UseCase";
-import { ProductRepository } from "../contracts/ProductRepository";
-import { ProductEntity } from "../entities/ProductEntity";
+import { UseCase } from '../../../common/contracts/UseCase';
+import { ProductRepository } from '../contracts/ProductRepository';
+import { ProductEntity } from '../entities/ProductEntity';
 
 export class DisableProductUseCase implements UseCase<number, ProductEntity> {
   private productRepository: ProductRepository;

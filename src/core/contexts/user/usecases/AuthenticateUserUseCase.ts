@@ -1,8 +1,8 @@
-import { UseCase } from "../../../common/contracts/UseCase";
-import { BadRequestError } from "../../../common/errors/BadRequestError";
-import { NotAuthorizedError } from "../../../common/errors/NotAuthorizedError";
-import { UserRepository } from "../contracts/UserRepository";
-import { AuthResponse, UserCredentials } from "../entities/UserEntity";
+import { UseCase } from '../../../common/contracts/UseCase';
+import { BadRequestError } from '../../../common/errors/BadRequestError';
+import { NotAuthorizedError } from '../../../common/errors/NotAuthorizedError';
+import { UserRepository } from '../contracts/UserRepository';
+import { AuthResponse, UserCredentials } from '../entities/UserEntity';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -20,11 +20,9 @@ export class AuthenticateUserUseCase implements UseCase<UserCredentials, AuthRes
     const validPassword: boolean = await bcrypt.compare(credentials.password, user.password!);
     if (!validPassword) throw new NotAuthorizedError('Invalid password.');
 
-    const token: string = jwt.sign(
-      { id: user.id! },
-      process.env.APP_SECRET_KEY!,
-      { expiresIn: process.env.JWT_TOKEN_DURATION_TIME! },
-    );
+    const token: string = jwt.sign({ id: user.id! }, process.env.APP_SECRET_KEY!, {
+      expiresIn: process.env.JWT_TOKEN_DURATION_TIME!,
+    });
     return {
       user,
       token,

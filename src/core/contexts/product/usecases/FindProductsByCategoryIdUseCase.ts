@@ -1,9 +1,11 @@
-import { UseCaseDoubleEntry } from "../../../common/contracts/UseCase";
-import { Pagination, PaginationParams } from "../../../common/entities/Entity";
-import { ProductRepository } from "../contracts/ProductRepository";
-import { ProductEntity } from "../entities/ProductEntity";
+import { UseCaseDoubleEntry } from '../../../common/contracts/UseCase';
+import { Pagination, PaginationParams } from '../../../common/entities/Entity';
+import { ProductRepository } from '../contracts/ProductRepository';
+import { ProductEntity } from '../entities/ProductEntity';
 
-export class FindProductsByCategoryIdUseCase implements UseCaseDoubleEntry<number, PaginationParams, Pagination<ProductEntity>> {
+export class FindProductsByCategoryIdUseCase
+  implements UseCaseDoubleEntry<number, PaginationParams, Pagination<ProductEntity>>
+{
   private productRepository: ProductRepository;
 
   constructor(productRepository: ProductRepository) {

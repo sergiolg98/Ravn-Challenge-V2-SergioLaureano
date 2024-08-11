@@ -1,8 +1,10 @@
-import { UseCaseDoubleEntry } from "../../../common/contracts/UseCase";
-import { ProductRepository } from "../contracts/ProductRepository";
-import { ProductEntity, UpdateProductEntity } from "../entities/ProductEntity";
+import { UseCaseDoubleEntry } from '../../../common/contracts/UseCase';
+import { ProductRepository } from '../contracts/ProductRepository';
+import { ProductEntity, UpdateProductEntity } from '../entities/ProductEntity';
 
-export class UpdateProductUseCase implements UseCaseDoubleEntry<number, UpdateProductEntity, ProductEntity> {
+export class UpdateProductUseCase
+  implements UseCaseDoubleEntry<number, UpdateProductEntity, ProductEntity>
+{
   private productRepository: ProductRepository;
 
   constructor(productRepository: ProductRepository) {

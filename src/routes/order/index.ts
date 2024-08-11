@@ -9,26 +9,17 @@ const router = Router();
 const orderController = container.resolve<OrderController>('orderController');
 
 // CLIENT ENDPOINTS
-router.post(
-  '/',
-  authenticate(Role.CLIENT),
-  checkTokenBlacklist,
-  (req, res) => orderController.create(req, res),
+router.post('/', checkTokenBlacklist, authenticate(Role.CLIENT), (req, res) =>
+  orderController.create(req, res),
 );
 
-router.get(
-  '/:orderId',
-  authenticate(Role.CLIENT),
-  checkTokenBlacklist,
-  (req, res) => orderController.findById(req, res),
+router.get('/:orderId', checkTokenBlacklist, authenticate(Role.CLIENT), (req, res) =>
+  orderController.findById(req, res),
 );
 
 // MANAGER ENDPOINTS
-router.get(
-  '/by-client/:userId',
-  authenticate(Role.MANAGER),
-  checkTokenBlacklist,
-  (req, res) => orderController.findByUserId(req, res),
+router.get('/by-client/:userId', checkTokenBlacklist, authenticate(Role.MANAGER), (req, res) =>
+  orderController.findByUserId(req, res),
 );
 
 export default router;

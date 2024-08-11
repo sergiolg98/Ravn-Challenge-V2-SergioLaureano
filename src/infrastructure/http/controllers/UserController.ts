@@ -11,7 +11,7 @@ export class UserController {
     private AuthenticateUserUseCase: AuthenticateUserUseCase,
     private RegisterUserUseCase: RegisterUserUseCase,
     private SignOutUserUseCase: SignOutUserUseCase,
-  ) { }
+  ) {}
 
   async getAll(_req: Request, res: Response): Promise<void> {
     const users: UserEntity[] = await this.GetAllUsersUseCase.execute();

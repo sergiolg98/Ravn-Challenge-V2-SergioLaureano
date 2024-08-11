@@ -1,17 +1,17 @@
 export interface ProductEntity {
-  id?: number,
-  name: string,
-  description?: string,
-  price: number,
-  active: boolean,
-  stock: number,
-  categoryId: number,
+  id?: number;
+  name: string;
+  description?: string;
+  price: number;
+  active: boolean;
+  stock: number;
+  categoryId: number;
 }
 
 export interface UpdateProductEntity {
-  name?: string,
-  description?: string,
-  price?: number,
-  active?: boolean,
-  stock?: number,
+  name?: string;
+  description?: string;
+  price?: number;
+  active?: boolean;
+  stock?: number;
 }

@@ -1,9 +1,11 @@
-import { UseCase } from "../../../common/contracts/UseCase";
-import { Pagination, PaginationParams } from "../../../common/entities/Entity";
-import { ProductRepository } from "../contracts/ProductRepository";
-import { ProductEntity } from "../entities/ProductEntity";
+import { UseCase } from '../../../common/contracts/UseCase';
+import { Pagination, PaginationParams } from '../../../common/entities/Entity';
+import { ProductRepository } from '../contracts/ProductRepository';
+import { ProductEntity } from '../entities/ProductEntity';
 
-export class FindAllProductsUseCase implements UseCase<PaginationParams, Pagination<ProductEntity>> {
+export class FindAllProductsUseCase
+  implements UseCase<PaginationParams, Pagination<ProductEntity>>
+{
   private productRepository: ProductRepository;
 
   constructor(productRepository: ProductRepository) {

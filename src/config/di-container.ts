@@ -27,7 +27,7 @@ import { SignOutUserUseCase } from '../core/contexts/user/usecases/SignOutUserUs
 import { RedisTokenManagementRepository } from '../infrastructure/repositories/redis/RedisTokenManagementRepository';
 
 const container = createContainer({
-  injectionMode: InjectionMode.CLASSIC
+  injectionMode: InjectionMode.CLASSIC,
 });
 
 container.register({
@@ -43,7 +43,7 @@ container.register({
   productController: asClass(ProductController).singleton(),
   productRepository: asClass(PostgresProductRepository).singleton(),
   CreateProductUseCase: asClass(CreateProductUseCase).singleton(),
-  UpdateProductUseCase: asClass(UpdateProductUseCase).singleton(), 
+  UpdateProductUseCase: asClass(UpdateProductUseCase).singleton(),
   FindAllProductsUseCase: asClass(FindAllProductsUseCase).singleton(),
   FindProductByIdUseCase: asClass(FindProductByIdUseCase).singleton(),
   FindProductsByCategoryIdUseCase: asClass(FindProductsByCategoryIdUseCase).singleton(),

@@ -1,9 +1,10 @@
-import { PrismaClient } from "@prisma/client";
-import { ProductEntity } from "../../../core/contexts/product/entities/ProductEntity";
-import { ProductRepository } from "../../../core/contexts/product/contracts/ProductRepository";
-import { PaginationParams, Pagination } from "../../../core/common/entities/Entity";
-import { BadRequestError } from "../../../core/common/errors/BadRequestError";
-import { PaginationHelper } from "./helpers";
+import { PrismaClient } from '@prisma/client';
+import { ProductEntity } from '../../../core/contexts/product/entities/ProductEntity';
+import { ProductRepository } from '../../../core/contexts/product/contracts/ProductRepository';
+import { PaginationParams, Pagination } from '../../../core/common/entities/Entity';
+import { BadRequestError } from '../../../core/common/errors/BadRequestError';
+import { PaginationHelper } from './helpers';
+import { NotFoundError } from '../../../core/common/errors/NotFoundError';
 
 export class PostgresProductRepository implements ProductRepository {
   private prisma: PrismaClient;
@@ -22,7 +23,7 @@ export class PostgresProductRepository implements ProductRepository {
       data: product,
       where: {
         id: Number(id),
-      }
+      },
     });
     return productCreated as ProductEntity;
   }
@@ -34,7 +35,7 @@ export class PostgresProductRepository implements ProductRepository {
       },
       data: {
         active: false,
-      }
+      },
     });
     return productUpdated as ProductEntity;
   }
@@ -43,7 +44,7 @@ export class PostgresProductRepository implements ProductRepository {
     const productDeleted = await this.prisma.product.delete({
       where: {
         id: Number(productId),
-      }
+      },
     });
     return productDeleted as ProductEntity;
   }
@@ -59,8 +60,9 @@ export class PostgresProductRepository implements ProductRepository {
         _count: {
           select: { likes: true },
         },
-      }
+      },
     });
+    if (!product) throw new NotFoundError(`No product found with id: ${productId}.`);
     return product as ProductEntity; // @todo it's not but let's check
   }
 
@@ -75,13 +77,13 @@ export class PostgresProductRepository implements ProductRepository {
         _count: {
           select: { likes: true },
         },
-      }
+      },
     });
 
     const pagination = {
-      page: (params.page) ? (params.page + 1) : 1, // @todo mejorar
+      page: params.page ? params.page + 1 : 1, // @todo mejorar
       data: products,
-    }
+    };
 
     return pagination as Pagination<ProductEntity>;
   }
@@ -102,13 +104,13 @@ export class PostgresProductRepository implements ProductRepository {
       },
       where: {
         categoryId: Number(categoryId),
-      }
+      },
     });
 
     const pagination = {
-      page: (params.page) ? (params.page + 1) : 1, // @todo mejorar
+      page: params.page ? params.page + 1 : 1, // @todo mejorar
       data: products,
-    }
+    };
     return pagination as Pagination<ProductEntity>;
   }
 
@@ -119,15 +121,15 @@ export class PostgresProductRepository implements ProductRepository {
           userId: Number(userId),
           productId: Number(productId),
         },
-      }
+      },
     });
 
-    if(previousLike) throw new BadRequestError('Already liked product by user');
+    if (previousLike) throw new BadRequestError('Already liked product by user');
 
     const likeRelation = {
       userId: Number(userId),
       productId: Number(productId),
-    }
+    };
 
     const likeCreated = await this.prisma.like.create({
       data: likeRelation,
@@ -143,7 +145,7 @@ export class PostgresProductRepository implements ProductRepository {
         productId: Number(productId),
         userId: Number(userId),
         quantity: Number(quantity),
-      }
+      },
     });
     return addedItem;
   }

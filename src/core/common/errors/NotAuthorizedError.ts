@@ -1,10 +1,10 @@
-import { CustomError, CustomErrorType } from "./CustomError";
+import { CustomError, CustomErrorType } from './CustomError';
 
 export class NotAuthorizedError extends CustomError {
-  statusCode = 401
+  statusCode = 401;
   errorType = CustomErrorType.NotAuthorized;
 
   constructor(message?: string) {
-    super(message ?? "Not authorized for the resource.");
+    super(message ?? 'Not authorized for the resource.');
   }
 }

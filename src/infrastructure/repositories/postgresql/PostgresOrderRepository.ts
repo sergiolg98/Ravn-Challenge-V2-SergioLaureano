@@ -1,10 +1,10 @@
-import { Pagination, PaginationParams } from "../../../core/common/entities/Entity";
-import { BadRequestError } from "../../../core/common/errors/BadRequestError";
-import { OrderStatus } from "../../../core/contexts/order/constants/status";
-import { OrderRepository } from "../../../core/contexts/order/contracts/OrderRepository";
-import { OrderEntity } from "../../../core/contexts/order/entities/OrderEntity";
-import { Prisma, PrismaClient } from "@prisma/client";
-import { PaginationHelper } from "./helpers";
+import { Pagination, PaginationParams } from '../../../core/common/entities/Entity';
+import { BadRequestError } from '../../../core/common/errors/BadRequestError';
+import { OrderStatus } from '../../../core/contexts/order/constants/status';
+import { OrderRepository } from '../../../core/contexts/order/contracts/OrderRepository';
+import { OrderEntity } from '../../../core/contexts/order/entities/OrderEntity';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { PaginationHelper } from './helpers';
 
 export class PostgresOrderRepository implements OrderRepository {
   private prisma: PrismaClient;
@@ -18,12 +18,12 @@ export class PostgresOrderRepository implements OrderRepository {
     return this.prisma.$transaction(async (trx) => {
       const cartItems = await trx.cartItem.findMany({
         where: { userId: Number(userId) },
-        include: { product: true }
+        include: { product: true },
       });
       if (cartItems.length === 0) throw new BadRequestError('User has no items in its cart.');
 
       // Create order
-      const orderCreated = await this.createOrder(trx, userId, cartItems)
+      const orderCreated = await this.createOrder(trx, userId, cartItems);
       await this.updateProductsStock(trx, cartItems);
       await this.clearCart(trx, userId);
 
@@ -34,9 +34,11 @@ export class PostgresOrderRepository implements OrderRepository {
   async findById(orderId: number): Promise<OrderEntity> {
     const order = await this.prisma.order.findUnique({
       where: { id: Number(orderId) },
-      include: { items: {
-        include: { product: true },
-      }},
+      include: {
+        items: {
+          include: { product: true },
+        },
+      },
     });
     return order as OrderEntity;
   }
@@ -55,13 +57,13 @@ export class PostgresOrderRepository implements OrderRepository {
       },
       where: {
         userId: Number(userId),
-      }
+      },
     });
 
     const pagination = {
-      page: (params.page) ? (params.page + 1) : 1,
+      page: params.page ? params.page + 1 : 1,
       data: products,
-    }
+    };
     return pagination as Pagination<OrderEntity>;
   }
 
@@ -81,24 +83,29 @@ export class PostgresOrderRepository implements OrderRepository {
             quantity: cartItem.quantity,
             unitPrice: cartItem.product.price,
             price: Number(cartItem.product.price) * Number(cartItem.quantity),
-          }))
-        }
+          })),
+        },
       },
       include: {
         items: true,
-      }
+      },
     });
     return orderCreated;
   }
 
-  private async updateProductsStock(transaction: Prisma.TransactionClient, cartItems: any[]): Promise<void> {
+  private async updateProductsStock(
+    transaction: Prisma.TransactionClient,
+    cartItems: any[],
+  ): Promise<void> {
     const productUpdates = cartItems.map((cartItem) => {
       if (cartItem.product.stock < cartItem.quantity) {
-        throw new BadRequestError(`Not enough stock for product "${cartItem.product.name}" with id ${cartItem.productId}.`);
+        throw new BadRequestError(
+          `Not enough stock for product "${cartItem.product.name}" with id ${cartItem.productId}.`,
+        );
       }
       return transaction.product.update({
         where: { id: cartItem.productId },
-        data: { stock: { decrement: cartItem.quantity } }
+        data: { stock: { decrement: cartItem.quantity } },
       });
     });
     Promise.all(productUpdates);
@@ -109,5 +116,4 @@ export class PostgresOrderRepository implements OrderRepository {
       where: { userId },
     });
   }
-
 }

@@ -1,9 +1,11 @@
-import { UseCaseDoubleEntry } from "../../../common/contracts/UseCase";
-import { Pagination, PaginationParams } from "../../../common/entities/Entity";
-import { OrderRepository } from "../contracts/OrderRepository";
-import { OrderEntity } from "../entities/OrderEntity";
+import { UseCaseDoubleEntry } from '../../../common/contracts/UseCase';
+import { Pagination, PaginationParams } from '../../../common/entities/Entity';
+import { OrderRepository } from '../contracts/OrderRepository';
+import { OrderEntity } from '../entities/OrderEntity';
 
-export class FindOrdersByUserIdUseCase implements UseCaseDoubleEntry<number, PaginationParams, Pagination<OrderEntity>> {
+export class FindOrdersByUserIdUseCase
+  implements UseCaseDoubleEntry<number, PaginationParams, Pagination<OrderEntity>>
+{
   private orderRepository: OrderRepository;
 
   constructor(orderRepository: OrderRepository) {

@@ -1,13 +1,13 @@
-import { UseCase } from "../../../common/contracts/UseCase";
-import { BadRequestError } from "../../../common/errors/BadRequestError";
-import { UserRepository } from "../contracts/UserRepository";
-import { UserEntity } from "../entities/UserEntity";
+import { UseCase } from '../../../common/contracts/UseCase';
+import { BadRequestError } from '../../../common/errors/BadRequestError';
+import { UserRepository } from '../contracts/UserRepository';
+import { UserEntity } from '../entities/UserEntity';
 import bcrypt from 'bcrypt';
 
-export class RegisterUserUseCase implements UseCase<UserEntity, UserEntity>{
+export class RegisterUserUseCase implements UseCase<UserEntity, UserEntity> {
   private userRepository: UserRepository;
 
-  constructor(userRepository: UserRepository){
+  constructor(userRepository: UserRepository) {
     this.userRepository = userRepository;
   }
 
@@ -23,7 +23,7 @@ export class RegisterUserUseCase implements UseCase<UserEntity, UserEntity>{
       email: data.email,
       password: hashed,
       role: data.role,
-    }
+    };
     return this.userRepository.create(user);
   }
 }

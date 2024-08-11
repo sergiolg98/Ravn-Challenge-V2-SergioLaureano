@@ -1,7 +1,7 @@
 export interface ImageEntity {
-  id?: number,
-  url: string,
-  productId: number,
+  id?: number;
+  url: string;
+  productId: number;
 }
 
 export interface UploadFile {

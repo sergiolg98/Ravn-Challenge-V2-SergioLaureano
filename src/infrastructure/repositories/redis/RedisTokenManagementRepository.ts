@@ -1,5 +1,5 @@
-import { TokenManagementRepository } from "../../../core/contexts/user/contracts/TokenManagementRepository";
-import { redisClient } from "../../../config/redis";
+import { TokenManagementRepository } from '../../../core/contexts/user/contracts/TokenManagementRepository';
+import { redisClient } from '../../../config/redis';
 
 export class RedisTokenManagementRepository implements TokenManagementRepository {
   async addToken(token: string, expiresAt: Date): Promise<boolean> {

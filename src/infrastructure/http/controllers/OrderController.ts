@@ -10,7 +10,7 @@ export class OrderController {
     private CreateOrderUseCase: CreateOrderUseCase,
     private FindOrderByIdUseCase: FindOrderByIdUseCase,
     private FindOrdersByUserIdUseCase: FindOrdersByUserIdUseCase,
-  ) { }
+  ) {}
 
   async create(req: Request, res: Response): Promise<void> {
     const user: UserEntity = req.user!;
@@ -30,7 +30,7 @@ export class OrderController {
     const paginationPararms: PaginationParams = {
       page,
       limit,
-    }
+    };
     const response = await this.FindOrdersByUserIdUseCase.execute(userId, paginationPararms);
     res.status(200).json(response);
   }

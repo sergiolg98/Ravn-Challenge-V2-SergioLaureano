@@ -1,6 +1,6 @@
-import { UseCase } from "../../../common/contracts/UseCase";
-import { ProductRepository } from "../contracts/ProductRepository";
-import { ProductEntity } from "../entities/ProductEntity";
+import { UseCase } from '../../../common/contracts/UseCase';
+import { ProductRepository } from '../contracts/ProductRepository';
+import { ProductEntity } from '../entities/ProductEntity';
 
 export class CreateProductUseCase implements UseCase<ProductEntity, ProductEntity> {
   private productRepository: ProductRepository;

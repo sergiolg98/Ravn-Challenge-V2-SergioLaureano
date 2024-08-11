@@ -1,6 +1,6 @@
-import { UseCaseDoubleEntry } from "../../../common/contracts/UseCase";
-import { ProductRepository } from "../contracts/ProductRepository";
-import { ProductEntity } from "../entities/ProductEntity";
+import { UseCaseDoubleEntry } from '../../../common/contracts/UseCase';
+import { ProductRepository } from '../contracts/ProductRepository';
+import { ProductEntity } from '../entities/ProductEntity';
 
 export class LikeProductUseCase implements UseCaseDoubleEntry<number, number, any> {
   private productRepository: ProductRepository;
@@ -12,5 +12,4 @@ export class LikeProductUseCase implements UseCaseDoubleEntry<number, number, an
   async execute(productId: number, userId: number): Promise<any> {
     return await this.productRepository.like(productId, userId);
   }
-
 }

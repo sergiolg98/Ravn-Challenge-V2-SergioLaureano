@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { CreateProductUseCase } from '../../../core/contexts/product/usecases/CreateProductUseCase';
-import { ProductEntity, UpdateProductEntity } from '../../../core/contexts/product/entities/ProductEntity';
+import {
+  ProductEntity,
+  UpdateProductEntity,
+} from '../../../core/contexts/product/entities/ProductEntity';
 import { DeleteProductUseCase } from '../../../core/contexts/product/usecases/DeleteProductUseCase';
 import { DisableProductUseCase } from '../../../core/contexts/product/usecases/DisableProductUseCase';
 import { FindAllProductsUseCase } from '../../../core/contexts/product/usecases/FindAllProductsUseCase';
@@ -24,30 +27,17 @@ export class ProductController {
     private DisableProductUseCase: DisableProductUseCase,
     private LikeProductUseCase: LikeProductUseCase,
     private AddProductToCartUseCase: AddProductToCartUseCase,
-  ) { }
+  ) {}
 
   async create(req: Request, res: Response): Promise<void> {
-    const {
-      name,
-      description,
-      price,
-      active,
-      stock,
-      categoryId,
-    } = req.body;
+    const { name, description, price, active, stock, categoryId } = req.body;
     const product: ProductEntity = { name, description, price, active, stock, categoryId };
     const response = await this.CreateProductUseCase.execute(product);
     res.status(201).json(response);
   }
 
   async update(req: Request, res: Response): Promise<void> {
-    const {
-      name,
-      description,
-      price,
-      active,
-      stock,
-    } = req.body;
+    const { name, description, price, active, stock } = req.body;
 
     const product: UpdateProductEntity = {
       name,
@@ -66,7 +56,7 @@ export class ProductController {
     const paginationPararms: PaginationParams = {
       page,
       limit,
-    }
+    };
     const response = await this.FindAllProductsUseCase.execute(paginationPararms);
     res.status(200).json(response);
   }
@@ -84,8 +74,11 @@ export class ProductController {
     const paginationPararms: PaginationParams = {
       page,
       limit,
-    }
-    const response = await this.FindProductsByCategoryIdUseCase.execute(categoryId, paginationPararms);
+    };
+    const response = await this.FindProductsByCategoryIdUseCase.execute(
+      categoryId,
+      paginationPararms,
+    );
     res.status(200).json(response);
   }
 
@@ -112,10 +105,9 @@ export class ProductController {
   async addToCart(req: Request, res: Response): Promise<void> {
     const { productId }: any = req.params;
     const { quantity }: any = req.body;
-    if (!quantity) throw new BadRequestError('No quantity found in request.'); 
+    if (!quantity) throw new BadRequestError('No quantity found in request.');
     const user: UserEntity = req.user!;
     const response = await this.AddProductToCartUseCase.execute(productId, user.id!, quantity);
     res.status(201).json(response);
   }
-
 }
