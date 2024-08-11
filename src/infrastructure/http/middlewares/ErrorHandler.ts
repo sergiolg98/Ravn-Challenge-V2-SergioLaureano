@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { CustomError } from '../../core/common/errors/CustomError';
-import { InternalServerError } from '../../core/common/errors/InternalServerError';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
-import { BadRequestError } from '../../core/common/errors/BadRequestError';
+import { BadRequestError } from '../../../core/common/errors/BadRequestError';
+import { CustomError } from '../../../core/common/errors/CustomError';
+import { InternalServerError } from '../../../core/common/errors/InternalServerError';
 
 export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
 

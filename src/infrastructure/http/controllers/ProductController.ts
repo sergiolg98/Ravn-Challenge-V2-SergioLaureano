@@ -1,13 +1,17 @@
 import { Request, Response } from 'express';
-import { CreateProductUseCase } from '../../core/contexts/product/usecases/CreateProductUseCase';
-import { ProductEntity, UpdateProductEntity } from '../../core/contexts/product/entities/ProductEntity';
-import { DeleteProductUseCase } from '../../core/contexts/product/usecases/DeleteProductUseCase';
-import { DisableProductUseCase } from '../../core/contexts/product/usecases/DisableProductUseCase';
-import { FindAllProductsUseCase } from '../../core/contexts/product/usecases/FindAllProductsUseCase';
-import { FindProductByIdUseCase } from '../../core/contexts/product/usecases/FindProductByIdUseCase';
-import { FindProductsByCategoryIdUseCase } from '../../core/contexts/product/usecases/FindProductsByCategoryIdUseCase';
-import { PaginationParams } from '../../core/common/entities/Entity';
-import { UpdateProductUseCase } from '../../core/contexts/product/usecases/UpdateProductUseCase';
+import { CreateProductUseCase } from '../../../core/contexts/product/usecases/CreateProductUseCase';
+import { ProductEntity, UpdateProductEntity } from '../../../core/contexts/product/entities/ProductEntity';
+import { DeleteProductUseCase } from '../../../core/contexts/product/usecases/DeleteProductUseCase';
+import { DisableProductUseCase } from '../../../core/contexts/product/usecases/DisableProductUseCase';
+import { FindAllProductsUseCase } from '../../../core/contexts/product/usecases/FindAllProductsUseCase';
+import { FindProductByIdUseCase } from '../../../core/contexts/product/usecases/FindProductByIdUseCase';
+import { FindProductsByCategoryIdUseCase } from '../../../core/contexts/product/usecases/FindProductsByCategoryIdUseCase';
+import { PaginationParams } from '../../../core/common/entities/Entity';
+import { UpdateProductUseCase } from '../../../core/contexts/product/usecases/UpdateProductUseCase';
+import { UserEntity } from '../../../core/contexts/user/entities/UserEntity';
+import { LikeProductUseCase } from '../../../core/contexts/product/usecases/LikeProductUseCase';
+import { AddProductToCartUseCase } from '../../../core/contexts/product/usecases/AddProductToCartUseCase';
+import { BadRequestError } from '../../../core/common/errors/BadRequestError';
 
 export class ProductController {
   constructor(
@@ -18,6 +22,8 @@ export class ProductController {
     private FindProductsByCategoryIdUseCase: FindProductsByCategoryIdUseCase,
     private DeleteProductUseCase: DeleteProductUseCase,
     private DisableProductUseCase: DisableProductUseCase,
+    private LikeProductUseCase: LikeProductUseCase,
+    private AddProductToCartUseCase: AddProductToCartUseCase,
   ) { }
 
   async create(req: Request, res: Response): Promise<void> {
@@ -94,4 +100,22 @@ export class ProductController {
     const response = await this.DisableProductUseCase.execute(productId);
     res.status(200).json(response);
   }
+
+  async like(req: Request, res: Response): Promise<void> {
+    const { productId }: any = req.params;
+
+    const user: UserEntity = req.user!; // is coming because of middleware
+    const response = await this.LikeProductUseCase.execute(productId, user.id!);
+    res.status(200).json(response);
+  }
+
+  async addToCart(req: Request, res: Response): Promise<void> {
+    const { productId }: any = req.params;
+    const { quantity }: any = req.body;
+    if (!quantity) throw new BadRequestError('No quantity found in request.'); 
+    const user: UserEntity = req.user!;
+    const response = await this.AddProductToCartUseCase.execute(productId, user.id!, quantity);
+    res.status(201).json(response);
+  }
+
 }

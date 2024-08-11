@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { container } from '../../config/di-container';
-import { ImageController } from './ImageController';
-import { ProductController } from './ProductController';
-import { authenticate } from '../../infrastructure/middlewares/auth';
+import { ImageController } from '../../infrastructure/http/controllers/ImageController';
+import { ProductController } from '../../infrastructure/http/controllers/ProductController';
+import { authenticate } from '../../infrastructure/http/middlewares/auth';
+import { uploadMiddleware } from '../../infrastructure/http/middlewares/multer';
 import { Role } from '../../core/contexts/user/constants/roles';
-import { uploadMiddleware } from '../../infrastructure/middlewares/multer';
 
 const router = Router();
 const productController = container.resolve<ProductController>('productController');
@@ -56,6 +56,19 @@ router.post(
   // authenticate(Role.MANAGER),
   uploadMiddleware.array("images", 3), // max 3 images
   (req, res) => imageController.upload(req, res),
+);
+
+// CLIENT ONLY ENDPOINTS
+router.post(
+  '/like/:productId',
+  authenticate(Role.CLIENT),
+  (req, res) => productController.like(req, res),
+);
+
+router.post(
+  '/:productId/add-to-cart',
+  authenticate(Role.CLIENT),
+  (req, res) => productController.addToCart(req, res),
 );
 
 export default router;

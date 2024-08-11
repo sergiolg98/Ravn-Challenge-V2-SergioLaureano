@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { container } from '../../config/di-container';
-import { UserController } from './UserController';
-import { authenticate } from '../../infrastructure/middlewares/auth';
+import { UserController } from '../../infrastructure/http/controllers/UserController';
+import { authenticate } from '../../infrastructure/http/middlewares/auth';
 import { Role } from '../../core/contexts/user/constants/roles';
 
 const router = Router();

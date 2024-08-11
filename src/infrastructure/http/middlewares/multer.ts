@@ -1,5 +1,5 @@
 import multer from "multer";
-import { BadRequestError } from "../../core/common/errors/BadRequestError";
+import { BadRequestError } from "../../../core/common/errors/BadRequestError";
 
 // Filter config
 const filter = (

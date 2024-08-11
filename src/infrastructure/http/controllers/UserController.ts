@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { GetAllUsersUseCase } from '../../core/contexts/user/usecases/GetAllUsersUseCase';
-import { RegisterUserUseCase } from '../../core/contexts/user/usecases/RegisterUserUseCase';
-import { AuthenticateUserUseCase } from '../../core/contexts/user/usecases/AuthenticateUserUseCase';
-import { UserCredentials, UserEntity } from '../../core/contexts/user/entities/UserEntity';
+import { UserEntity, UserCredentials } from '../../../core/contexts/user/entities/UserEntity';
+import { GetAllUsersUseCase } from '../../../core/contexts/user/usecases/GetAllUsersUseCase';
+import { AuthenticateUserUseCase } from '../../../core/contexts/user/usecases/AuthenticateUserUseCase';
+import { RegisterUserUseCase } from '../../../core/contexts/user/usecases/RegisterUserUseCase';
 
 export class UserController {
   constructor(

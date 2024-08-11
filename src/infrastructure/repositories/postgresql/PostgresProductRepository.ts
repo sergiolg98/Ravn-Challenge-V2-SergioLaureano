@@ -3,14 +3,15 @@ import { ProductEntity } from "../../../core/contexts/product/entities/ProductEn
 import { ProductRepository } from "../../../core/contexts/product/contracts/ProductRepository";
 import { PaginationParams, Pagination } from "../../../core/common/entities/Entity";
 import { DEFAULT_LIMIT, MAX_LIMIT } from "./values";
+import { BadRequestError } from "../../../core/common/errors/BadRequestError";
 
 export class PostgresProductRepository implements ProductRepository {
   private prisma: PrismaClient;
 
-  constructor(){
+  constructor() {
     this.prisma = new PrismaClient();
   }
-  
+
   async create(product: ProductEntity): Promise<ProductEntity> {
     const productCreated = await this.prisma.product.create({ data: product });
     return productCreated as ProductEntity;
@@ -55,11 +56,14 @@ export class PostgresProductRepository implements ProductRepository {
       include: {
         category: true,
         images: true,
+        _count: {
+          select: { likes: true },
+        },
       }
     });
     return product as ProductEntity; // @todo it's not but let's check
   }
-  
+
   async findAll(params: PaginationParams): Promise<Pagination<ProductEntity>> {
     const limit: number = this.validateLimit(params.limit);
     const page: number = this.getPage(limit, params.page);
@@ -68,6 +72,9 @@ export class PostgresProductRepository implements ProductRepository {
       take: Number(limit),
       include: {
         images: true,
+        _count: {
+          select: { likes: true },
+        },
       }
     });
 
@@ -89,6 +96,9 @@ export class PostgresProductRepository implements ProductRepository {
       take: limit,
       include: {
         images: true,
+        _count: {
+          select: { likes: true },
+        },
       },
       where: {
         categoryId: Number(categoryId),
@@ -102,14 +112,50 @@ export class PostgresProductRepository implements ProductRepository {
     return pagination as Pagination<ProductEntity>;
   }
 
+  async like(productId: number, userId: number): Promise<any> {
+    const previousLike = await this.prisma.like.findUnique({
+      where: {
+        userId_productId: {
+          userId: Number(userId),
+          productId: Number(productId),
+        },
+      }
+    });
+
+    if(previousLike) throw new BadRequestError('Already liked product by user');
+
+    const likeRelation = {
+      userId: Number(userId),
+      productId: Number(productId),
+    }
+
+    const likeCreated = await this.prisma.like.create({
+      data: likeRelation,
+    });
+
+    return likeCreated as any;
+  }
+
+  addToCart(productId: number, userId: number, quantity: number): Promise<any> {
+    // Create a relation
+    const addedItem = this.prisma.cartItem.create({
+      data: {
+        productId: Number(productId),
+        userId: Number(userId),
+        quantity: Number(quantity),
+      }
+    });
+    return addedItem;
+  }
+
   private validateLimit(initialLimit?: number): number {
-    if(!initialLimit) return DEFAULT_LIMIT;
+    if (!initialLimit) return DEFAULT_LIMIT;
     return (initialLimit > 0 && initialLimit <= MAX_LIMIT) ? initialLimit : DEFAULT_LIMIT;
   }
 
   private getPage(limit: number, page?: number): number {
     let currentPage: number = 0;
-    if(page !== null && page !== undefined) {
+    if (page !== null && page !== undefined) {
       currentPage = page - 1; // Si pide la pag 1 => 0*4 = 0 de skip
       currentPage = currentPage * limit;
     }

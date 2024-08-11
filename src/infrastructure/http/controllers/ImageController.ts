@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { UploadImagesUseCase } from '../../core/contexts/product/usecases/UploadImagesUseCase';
-import { UploadFile } from '../../core/contexts/product/entities/ImageEntity';
+import { UploadImagesUseCase } from '../../../core/contexts/product/usecases/UploadImagesUseCase';
+import { UploadFile } from '../../../core/contexts/product/entities/ImageEntity';
 
 export class ImageController {
   constructor(
