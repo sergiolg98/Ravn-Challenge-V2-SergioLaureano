@@ -1,4 +1,5 @@
 export interface OrderEntity {
+  id?: number;
   createdAt: Date;
   status: string;
   userId: number;
@@ -6,6 +7,7 @@ export interface OrderEntity {
 }
 
 export interface OrderItemEntity {
+  id?: number;
   productId: number;
   quantity: number;
   unitPrice: number;

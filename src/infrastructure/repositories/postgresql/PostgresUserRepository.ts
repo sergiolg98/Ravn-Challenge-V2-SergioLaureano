@@ -3,11 +3,7 @@ import { UserEntity } from '../../../core/contexts/user/entities/UserEntity';
 import { PrismaClient } from '@prisma/client';
 
 export class PostgresUserRepository implements UserRepository {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  constructor(private prisma: PrismaClient) {}
 
   // Only informative, to delete later
   async getAll(): Promise<UserEntity[]> {

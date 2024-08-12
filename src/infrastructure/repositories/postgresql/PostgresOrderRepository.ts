@@ -7,11 +7,7 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { PaginationHelper } from './helpers';
 
 export class PostgresOrderRepository implements OrderRepository {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  constructor(private prisma: PrismaClient) {}
 
   async create(userId: number): Promise<OrderEntity> {
     // All in a transaction to keep an atomic operation
@@ -61,7 +57,7 @@ export class PostgresOrderRepository implements OrderRepository {
     });
 
     const pagination = {
-      page: params.page ? params.page + 1 : 1,
+      page: params.page ? page + 1 : 1,
       data: products,
     };
     return pagination as Pagination<OrderEntity>;

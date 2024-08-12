@@ -1,4 +1,4 @@
-import { asClass, createContainer, InjectionMode } from 'awilix';
+import { asClass, asFunction, createContainer, InjectionMode } from 'awilix';
 import { PostgresUserRepository } from '../infrastructure/repositories/postgresql/PostgresUserRepository';
 import { GetAllUsersUseCase } from '../core/contexts/user/usecases/GetAllUsersUseCase';
 import { UserController } from '../infrastructure/http/controllers/UserController';
@@ -25,12 +25,14 @@ import { FindOrderByIdUseCase } from '../core/contexts/order/usecases/FindOrderB
 import { FindOrdersByUserIdUseCase } from '../core/contexts/order/usecases/FindOrdersByUserIdUseCase';
 import { SignOutUserUseCase } from '../core/contexts/user/usecases/SignOutUserUseCase';
 import { RedisTokenManagementRepository } from '../infrastructure/repositories/redis/RedisTokenManagementRepository';
+import { PrismaClient } from '@prisma/client';
 
 const container = createContainer({
   injectionMode: InjectionMode.CLASSIC,
 });
 
 container.register({
+  prisma: asFunction(() => new PrismaClient()).singleton(),
   // User
   userController: asClass(UserController).singleton(),
   userRepository: asClass(PostgresUserRepository).singleton(),

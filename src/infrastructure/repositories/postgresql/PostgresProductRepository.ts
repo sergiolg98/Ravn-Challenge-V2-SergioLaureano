@@ -1,5 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { ProductEntity } from '../../../core/contexts/product/entities/ProductEntity';
+import {
+  ProductEntity,
+  UpdateProductEntity,
+} from '../../../core/contexts/product/entities/ProductEntity';
 import { ProductRepository } from '../../../core/contexts/product/contracts/ProductRepository';
 import { PaginationParams, Pagination } from '../../../core/common/entities/Entity';
 import { BadRequestError } from '../../../core/common/errors/BadRequestError';
@@ -7,18 +10,14 @@ import { PaginationHelper } from './helpers';
 import { NotFoundError } from '../../../core/common/errors/NotFoundError';
 
 export class PostgresProductRepository implements ProductRepository {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  constructor(private prisma: PrismaClient) {}
 
   async create(product: ProductEntity): Promise<ProductEntity> {
     const productCreated = await this.prisma.product.create({ data: product });
     return productCreated as ProductEntity;
   }
 
-  async update(id: number, product: ProductEntity): Promise<ProductEntity> {
+  async update(id: number, product: UpdateProductEntity): Promise<ProductEntity> {
     const productCreated = await this.prisma.product.update({
       data: product,
       where: {
@@ -78,10 +77,13 @@ export class PostgresProductRepository implements ProductRepository {
           select: { likes: true },
         },
       },
+      where: {
+        active: true,
+      },
     });
 
     const pagination = {
-      page: params.page ? params.page + 1 : 1, // @todo mejorar
+      page: params.page ? page + 1 : 1,
       data: products,
     };
 
@@ -104,11 +106,12 @@ export class PostgresProductRepository implements ProductRepository {
       },
       where: {
         categoryId: Number(categoryId),
+        active: true,
       },
     });
 
     const pagination = {
-      page: params.page ? params.page + 1 : 1, // @todo mejorar
+      page: params.page ? page + 1 : 1,
       data: products,
     };
     return pagination as Pagination<ProductEntity>;
