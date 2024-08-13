@@ -1,3 +1,5 @@
+import { BadRequestError } from "../../../core/common/errors/BadRequestError";
+
 export const MAX_ITEMS_PER_PAGE_LIMIT = 10;
 export const DEFAULT_ITEMS_PER_PAGE_LIMIT = 5;
 
@@ -12,7 +14,7 @@ export class PaginationHelper {
   static getPage(limit: number, page?: number): number {
     let currentPage = 0;
     if (page !== null && page !== undefined) {
-      currentPage = page - 1; // Si pide la pag 1 => 0*4 = 0 de skip
+      currentPage = (page > 0) ? page - 1 : currentPage; // Si pide la pag 1 => 0*4 = 0 de skip
       currentPage = currentPage * limit;
     }
     return currentPage;

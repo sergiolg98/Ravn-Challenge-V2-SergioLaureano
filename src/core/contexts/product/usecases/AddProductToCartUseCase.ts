@@ -1,3 +1,6 @@
+
+import { BadRequestError } from '../../../common/errors/BadRequestError';
+import { NotFoundError } from '../../../common/errors/NotFoundError';
 import { ProductRepository } from '../contracts/ProductRepository';
 
 export class AddProductToCartUseCase {
@@ -9,6 +12,15 @@ export class AddProductToCartUseCase {
   }
 
   async execute(productId: number, userId: number, quantity: number): Promise<any> {
+    const product = await this.productRepository.findById(productId);
+    if (!product) throw new NotFoundError('Product not found with id provided.');
+
+    const isDeleted = await this.productRepository.checkIfDeleted(productId);
+    if (isDeleted) throw new NotFoundError(`This product has been previously deleted.`);
+
+    const isActive = await this.productRepository.checkIfActive(productId);
+    if (!isActive) throw new BadRequestError(`Product disabled. Cannot be added to the cart.`);
+
     const productCreated = await this.productRepository.addToCart(productId, userId, quantity);
     return productCreated;
   }

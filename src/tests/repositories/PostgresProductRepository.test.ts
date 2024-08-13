@@ -5,8 +5,6 @@ import {
   UpdateProductEntity,
 } from '../../core/contexts/product/entities/ProductEntity';
 import { PrismaClient } from '@prisma/client/extension';
-import { BadRequestError } from '../../core/common/errors/BadRequestError';
-import { NotFoundError } from '../../core/common/errors/NotFoundError';
 import { Pagination, PaginationParams } from '../../core/common/entities/Entity';
 import { DEFAULT_ITEMS_PER_PAGE_LIMIT } from '../../infrastructure/repositories/postgresql/helpers';
 
@@ -44,6 +42,39 @@ describe('PostgresProductRepository', () => {
     });
   });
 
+  it('should check if a product is active', async () => {
+    const activeProduct = false;
+
+    mockPrisma.product.count.mockResolvedValueOnce(activeProduct);
+    const productMockId: number = 10;
+    const result: boolean = await productRepository.checkIfActive(productMockId);
+
+    expect(result).toEqual(activeProduct);
+    expect(mockPrisma.product.count).toHaveBeenCalledWith({
+      where: {
+        id: productMockId,
+        active: true,
+      },
+    });
+  });
+
+  it('should check if a product is deleted', async () => {
+    const deletedProduct = true;
+
+    mockPrisma.product.count.mockResolvedValueOnce(deletedProduct);
+    const productMockId: number = 20;
+    const result: boolean = await productRepository.checkIfDeleted(productMockId);
+
+    expect(result).toEqual(deletedProduct);
+    expect(mockPrisma.product.count).toHaveBeenCalledWith({
+      where: {
+        id: productMockId,
+        deleted: true,
+      },
+    });
+  });
+
+
   it('should update a product', async () => {
     const updatePayload: UpdateProductEntity = {
       description: 'new description',
@@ -71,7 +102,7 @@ describe('PostgresProductRepository', () => {
     });
   });
 
-  it('should delete a product', async () => {
+  it('should make a soft delete on a product', async () => {
     const productDeleted: ProductEntity = {
       id: 1,
       name: 'Test Product',
@@ -80,15 +111,17 @@ describe('PostgresProductRepository', () => {
       active: true,
       stock: 50,
       categoryId: 1,
+      deleted: true,
     };
 
-    mockPrisma.product.delete.mockResolvedValueOnce(productDeleted);
+    mockPrisma.product.update.mockResolvedValueOnce(productDeleted);
 
-    const result = await productRepository.delete(1);
+    const result = await productRepository.softDelete(1);
 
     expect(result).toEqual(productDeleted);
-    expect(mockPrisma.product.delete).toHaveBeenCalledWith({
+    expect(mockPrisma.product.update).toHaveBeenCalledWith({
       where: { id: 1 },
+      data: { deleted: true },
     });
   });
 
@@ -122,8 +155,8 @@ describe('PostgresProductRepository', () => {
 
   it('should throw NotFoundError if product not found by id', async () => {
     mockPrisma.product.findUnique.mockResolvedValueOnce(null);
-
-    await expect(productRepository.findById(1)).rejects.toThrow(NotFoundError);
+    const result = await productRepository.findById(1);
+    expect(result).toEqual(null);
     expect(mockPrisma.product.findUnique).toHaveBeenCalledWith({
       where: { id: 1 },
       include: {
@@ -158,7 +191,7 @@ describe('PostgresProductRepository', () => {
     });
   });
 
-  describe('findAll', () => {
+  describe('Finding Products', () => {
     it('should find all products with pagination 1st page and 1 item per page', async () => {
       const params: PaginationParams = { limit: 1, page: 1 };
 
@@ -204,7 +237,7 @@ describe('PostgresProductRepository', () => {
           },
         },
         where: {
-          active: true,
+          deleted: false,
         },
       });
     });
@@ -254,7 +287,58 @@ describe('PostgresProductRepository', () => {
           },
         },
         where: {
+          deleted: false,
+        },
+      });
+    });
+
+    it('should find products corresponding to a given category', async () => {
+      const params: PaginationParams = {};
+
+      const mockedProducts = [
+        {
+          id: 1,
+          name: 'Barcelona T-Shirt 24-25',
+          description: 'Barcelona Home kit for 24-25 season.',
+          price: 512.99,
           active: true,
+          stock: 200,
+          categoryId: 1,
+          images: [
+            {
+              id: 1,
+              url: 'http:.//localhost:4556/images-bucket/barca_24_25_home.pjeg',
+              productId: 1,
+            },
+          ],
+          _count: {
+            likes: 230,
+          },
+        },
+      ];
+
+      const pagination: Pagination<ProductEntity> = {
+        page: 1,
+        data: mockedProducts as ProductEntity[],
+      };
+
+      mockPrisma.product.findMany.mockResolvedValueOnce(mockedProducts);
+
+      const result = await productRepository.findByCategoryId(1, params);
+
+      expect(result).toEqual(pagination);
+      expect(mockPrisma.product.findMany).toHaveBeenCalledWith({
+        skip: 0,
+        take: DEFAULT_ITEMS_PER_PAGE_LIMIT,
+        include: {
+          images: true,
+          _count: {
+            select: { likes: true },
+          },
+        },
+        where: {
+          categoryId: 1,
+          deleted: false,
         },
       });
     });
@@ -271,21 +355,23 @@ describe('PostgresProductRepository', () => {
     const result = await productRepository.like(1, 1);
 
     expect(result).toEqual(likeCreated);
-    expect(mockPrisma.like.findUnique).toHaveBeenCalledWith({
-      where: { userId_productId: likeData },
-    });
+   
     expect(mockPrisma.like.create).toHaveBeenCalledWith({
       data: likeData,
     });
   });
 
-  it('should throw BadRequestError if product already liked by user', async () => {
-    const likeData = { userId: 1, productId: 1 };
-    mockPrisma.like.findUnique.mockResolvedValueOnce(likeData);
+  it('should return true if product already liked by user', async () => {
+    const previouslyLiked = true;
+    mockPrisma.like.count.mockResolvedValueOnce(true);
 
-    await expect(productRepository.like(1, 1)).rejects.toThrow(BadRequestError);
-    expect(mockPrisma.like.findUnique).toHaveBeenCalledWith({
-      where: { userId_productId: likeData },
+    const result = await productRepository.checkIfPreviousLike(1, 1);
+    expect(previouslyLiked).toEqual(result);
+    expect(mockPrisma.like.count).toHaveBeenCalledWith({
+      where: {
+        userId: 1,
+        productId: 1,
+      },
     });
   });
 

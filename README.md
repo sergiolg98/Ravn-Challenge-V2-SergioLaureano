@@ -39,7 +39,7 @@ docker-compose down
 
 ## Pending tasks
 
-- [ ] Add Prettier.
-- [ ] Add ESLint.
-- [ ] Add Jest for testing.
-- [ ] Generate Postman documentation.
+- [X] Add Prettier.
+- [X] Add ESLint.
+- [X] Add Jest for testing.
+- [  ] Generate Postman documentation.

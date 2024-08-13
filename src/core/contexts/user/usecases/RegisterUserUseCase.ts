@@ -13,9 +13,7 @@ export class RegisterUserUseCase implements UseCase<UserEntity, UserEntity> {
 
   async execute(data: UserEntity): Promise<UserEntity> {
     const existingUser = await this.userRepository.findByEmail(data.email);
-    if (existingUser) {
-      throw new BadRequestError('User already exists');
-    }
+    if (existingUser) throw new BadRequestError('User with email provided already exists.');
 
     const hashed = await bcrypt.hash(data.password!, 10);
     const user: UserEntity = {
@@ -24,6 +22,14 @@ export class RegisterUserUseCase implements UseCase<UserEntity, UserEntity> {
       password: hashed,
       role: data.role,
     };
-    return this.userRepository.create(user);
+    const userCreated = await this.userRepository.create(user);
+    // Build up object exempting password
+    const userCreatedResponse = {
+      id: userCreated.id,
+      name: userCreated.name,
+      email: userCreated.email,
+      role: userCreated.role,
+    };
+    return userCreatedResponse; 
   }
 }

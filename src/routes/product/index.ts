@@ -24,7 +24,7 @@ router.post('/', checkTokenBlacklist, authenticate(Role.MANAGER), (req, res) =>
 );
 
 router.delete('/:productId', checkTokenBlacklist, authenticate(Role.MANAGER), (req, res) =>
-  productController.delete(req, res),
+  productController.softDelete(req, res),
 );
 
 router.put('/:productId', checkTokenBlacklist, authenticate(Role.MANAGER), (req, res) =>

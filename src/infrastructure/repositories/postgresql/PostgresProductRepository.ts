@@ -5,9 +5,7 @@ import {
 } from '../../../core/contexts/product/entities/ProductEntity';
 import { ProductRepository } from '../../../core/contexts/product/contracts/ProductRepository';
 import { PaginationParams, Pagination } from '../../../core/common/entities/Entity';
-import { BadRequestError } from '../../../core/common/errors/BadRequestError';
 import { PaginationHelper } from './helpers';
-import { NotFoundError } from '../../../core/common/errors/NotFoundError';
 
 export class PostgresProductRepository implements ProductRepository {
   constructor(private prisma: PrismaClient) {}
@@ -39,16 +37,19 @@ export class PostgresProductRepository implements ProductRepository {
     return productUpdated as ProductEntity;
   }
 
-  async delete(productId: number): Promise<ProductEntity> {
-    const productDeleted = await this.prisma.product.delete({
+  async softDelete(productId: number): Promise<ProductEntity> {
+    const productDeleted = await this.prisma.product.update({
       where: {
         id: Number(productId),
       },
+      data: {
+        deleted: true,
+      }
     });
     return productDeleted as ProductEntity;
   }
 
-  async findById(productId: number): Promise<ProductEntity> {
+  async findById(productId: number): Promise<ProductEntity | null> {
     const product = await this.prisma.product.findUnique({
       where: {
         id: Number(productId),
@@ -61,8 +62,28 @@ export class PostgresProductRepository implements ProductRepository {
         },
       },
     });
-    if (!product) throw new NotFoundError(`No product found with id: ${productId}.`);
-    return product as ProductEntity; // @todo it's not but let's check
+    console.log(' >>> VARIBALE: ', product);
+    return product as ProductEntity;
+  }
+
+  async checkIfDeleted(productId: number): Promise<boolean> {
+    const product = await this.prisma.product.count({
+      where: {
+        id: Number(productId),
+        deleted: true,
+      },
+    });
+    return product > 0;
+  }
+
+  async checkIfActive(productId: number): Promise<boolean> {
+    const product = await this.prisma.product.count({
+      where: {
+        id: Number(productId),
+        active: true,
+      },
+    });
+    return product > 0;
   }
 
   async findAll(params: PaginationParams): Promise<Pagination<ProductEntity>> {
@@ -78,7 +99,7 @@ export class PostgresProductRepository implements ProductRepository {
         },
       },
       where: {
-        active: true,
+        deleted: false,
       },
     });
 
@@ -106,7 +127,7 @@ export class PostgresProductRepository implements ProductRepository {
       },
       where: {
         categoryId: Number(categoryId),
-        active: true,
+        deleted: false,
       },
     });
 
@@ -117,18 +138,17 @@ export class PostgresProductRepository implements ProductRepository {
     return pagination as Pagination<ProductEntity>;
   }
 
-  async like(productId: number, userId: number): Promise<any> {
-    const previousLike = await this.prisma.like.findUnique({
+  async checkIfPreviousLike(productId: number, userId: number): Promise<any> {
+    const previousLike = await this.prisma.like.count({
       where: {
-        userId_productId: {
-          userId: Number(userId),
-          productId: Number(productId),
-        },
+        userId: Number(userId),
+        productId: Number(productId),
       },
     });
+    return previousLike > 0;
+  }
 
-    if (previousLike) throw new BadRequestError('Already liked product by user');
-
+  async like(productId: number, userId: number): Promise<any> {
     const likeRelation = {
       userId: Number(userId),
       productId: Number(productId),

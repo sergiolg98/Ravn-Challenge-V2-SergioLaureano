@@ -1,6 +1,5 @@
 import { asClass, asFunction, createContainer, InjectionMode } from 'awilix';
 import { PostgresUserRepository } from '../infrastructure/repositories/postgresql/PostgresUserRepository';
-import { GetAllUsersUseCase } from '../core/contexts/user/usecases/GetAllUsersUseCase';
 import { UserController } from '../infrastructure/http/controllers/UserController';
 import { RegisterUserUseCase } from '../core/contexts/user/usecases/RegisterUserUseCase';
 import { AuthenticateUserUseCase } from '../core/contexts/user/usecases/AuthenticateUserUseCase';
@@ -37,7 +36,6 @@ container.register({
   userController: asClass(UserController).singleton(),
   userRepository: asClass(PostgresUserRepository).singleton(),
   tokenManagementRepository: asClass(RedisTokenManagementRepository).singleton(),
-  GetAllUsersUseCase: asClass(GetAllUsersUseCase).singleton(),
   RegisterUserUseCase: asClass(RegisterUserUseCase).singleton(),
   AuthenticateUserUseCase: asClass(AuthenticateUserUseCase).singleton(),
   SignOutUserUseCase: asClass(SignOutUserUseCase).singleton(),

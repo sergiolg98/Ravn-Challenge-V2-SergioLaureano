@@ -82,7 +82,7 @@ export class ProductController {
     res.status(200).json(response);
   }
 
-  async delete(req: Request, res: Response): Promise<void> {
+  async softDelete(req: Request, res: Response): Promise<void> {
     const { productId }: any = req.params;
     const response = await this.DeleteProductUseCase.execute(productId);
     res.status(200).json(response);

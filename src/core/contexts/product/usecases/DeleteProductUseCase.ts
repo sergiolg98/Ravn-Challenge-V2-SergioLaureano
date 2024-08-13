@@ -1,4 +1,5 @@
 import { UseCase } from '../../../common/contracts/UseCase';
+import { NotFoundError } from '../../../common/errors/NotFoundError';
 import { ImageRepository } from '../contracts/ImageRepository';
 import { ProductRepository } from '../contracts/ProductRepository';
 import { ProductEntity } from '../entities/ProductEntity';
@@ -14,9 +15,13 @@ export class DeleteProductUseCase implements UseCase<number, ProductEntity> {
   }
 
   async execute(productId: number): Promise<ProductEntity> {
-    await this.imageRepository.deleteByProductId(productId); // delete images related
-    const disabledProduct = await this.productRepository.delete(productId);
+    const product = await this.productRepository.findById(productId);
+    if (!product) throw new NotFoundError('Product not found with id provided.');
 
-    return disabledProduct;
+    const isDeleted = await this.productRepository.checkIfDeleted(productId);
+    if (isDeleted) throw new NotFoundError(`This product has been previously deleted.`);
+
+    const deletedProduct = await this.productRepository.softDelete(productId);
+    return deletedProduct;
   }
 }

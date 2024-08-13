@@ -4,6 +4,7 @@ export interface ProductEntity {
   description?: string;
   price: number;
   active: boolean;
+  deleted?: boolean;
   stock: number;
   categoryId: number;
 }

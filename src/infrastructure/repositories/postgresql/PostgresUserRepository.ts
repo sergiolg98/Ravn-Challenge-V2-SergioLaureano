@@ -5,12 +5,6 @@ import { PrismaClient } from '@prisma/client';
 export class PostgresUserRepository implements UserRepository {
   constructor(private prisma: PrismaClient) {}
 
-  // Only informative, to delete later
-  async getAll(): Promise<UserEntity[]> {
-    const users = await this.prisma.user.findMany();
-    return users as UserEntity[];
-  }
-
   async create(user: UserEntity): Promise<UserEntity> {
     const createdUser = await this.prisma.user.create({
       data: {

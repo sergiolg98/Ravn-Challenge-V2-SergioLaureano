@@ -6,10 +6,12 @@ const prismaMock = {
     delete: jest.fn(),
     findUnique: jest.fn(),
     findMany: jest.fn(),
+    count: jest.fn(),
   },
   like: {
     findUnique: jest.fn(),
     create: jest.fn(),
+    count: jest.fn(),
   },
   cartItem: {
     create: jest.fn(),

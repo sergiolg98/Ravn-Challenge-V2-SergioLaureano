@@ -104,32 +104,4 @@ describe('PostgresUserRepository', () => {
       expect(result).toBeNull();
     });
   });
-
-  describe('getAll', () => {
-    it('should return a list of users', async () => {
-      const mockUsers: UserEntity[] = [
-        {
-          id: 1,
-          name: 'Sergio Laureano',
-          email: 'slaureang@arequipasports.com',
-          password: 'hashed_123456789',
-          role: Role.MANAGER,
-        },
-        {
-          id: 1,
-          name: 'Dani Olmo',
-          email: 'dolmo@arequipasports.com',
-          password: 'hashed_334455667',
-          role: Role.CLIENT,
-        },
-      ];
-
-      mockPrisma.user.findMany.mockResolvedValueOnce(mockUsers);
-
-      const result = await userRepository.getAll();
-
-      expect(mockPrisma.user.findMany).toHaveBeenCalled();
-      expect(result).toEqual(mockUsers);
-    });
-  });
 });
