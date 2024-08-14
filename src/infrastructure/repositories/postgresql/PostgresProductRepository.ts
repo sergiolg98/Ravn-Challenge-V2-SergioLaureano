@@ -8,7 +8,7 @@ import { PaginationParams, Pagination } from '../../../core/common/entities/Enti
 import { PaginationHelper } from './helpers';
 
 export class PostgresProductRepository implements ProductRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) { }
 
   async create(product: ProductEntity): Promise<ProductEntity> {
     const productCreated = await this.prisma.product.create({ data: product });
@@ -62,7 +62,6 @@ export class PostgresProductRepository implements ProductRepository {
         },
       },
     });
-    console.log(' >>> VARIBALE: ', product);
     return product as ProductEntity;
   }
 
@@ -171,5 +170,36 @@ export class PostgresProductRepository implements ProductRepository {
       },
     });
     return addedItem;
+  }
+
+  async showUserCart(userId: number): Promise<any[]> {
+    const cartItems = await this.prisma.cartItem.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        product: {
+          include: {
+            images: true,
+            category: true,
+          },
+        },
+      },
+    });
+    const products: any[] = cartItems.map((item) => ({
+      id: item.id,
+      quantity: item.quantity,
+      product: {
+        id: item.product.id,
+        name: item.product.name,
+        description: item.product.description,
+        price: item.product.price,
+        stock: item.product.stock,
+        category: item.product.category.name,
+        images: item.product.images.map((image) => image.url),
+      },
+    }));
+
+    return products;
   }
 }

@@ -1,19 +1,26 @@
-# An Sports Store
+# REST API - An Sports Store
 
 - By: Sergio Laureano
 - Based on: Ravn-Challenge-V2 Tiny Store
+- Official Documentation: You can refer to the official documentation for this project here: [API - Sports Store](https://documenter.getpostman.com/view/4148176/2sA3s6EUu6)
 ---------------------------
 
 ## Tech Stack
 
-- Node.js, Typescript, Prisma, Postgres
-- The project can be built up with Docker to ensure all versions and requirements are satisfied.
+- Node.js, Typescript, Prisma, Postgres for the REST API.
+- Localstack to emulate locally AWS Services needed as S3 Bucket to store images.
+- Redis to keep token keys, to implement a sign-out strategy based on blacklisting tokens.
+- This project is meant to be built with Docker to ensure all versions and requirements are satisfied. All Docker files are ready to build the image and containers.
 
 ## Project Description
 
 - This is Node.js project with Typescript to build a REST API for an Sports Store.
-- The project follows Clean Architecture style separating the core business part from the infrastructure and the routes which uses Express.
-- This will be continued ...
+- The project follows **Clean Architecture** style separating the core business part from the infrastructure and the routes which uses Express.
+
+## Documentation
+
+- Official documentation: [API - Sports Store](https://documenter.getpostman.com/view/4148176/2sA3s6EUu6)
+
 
 ## Instructions to run 
 
@@ -37,9 +44,8 @@ docker-compose up --build -d
 docker-compose down
 ```
 
-## Pending tasks
+## About testing
 
-- [X] Add Prettier.
-- [X] Add ESLint.
-- [X] Add Jest for testing.
-- [  ] Generate Postman documentation.
+- We have covered our repositories which carry the most important operations in this project. Here you can see a printscreen of the full coverage results:
+
+![Code coverage](https://i.ibb.co/g9fwH5t/coverage.png)

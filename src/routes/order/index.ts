@@ -13,7 +13,7 @@ router.post('/', checkTokenBlacklist, authenticate(Role.CLIENT), (req, res) =>
   orderController.create(req, res),
 );
 
-router.get('/:orderId', checkTokenBlacklist, authenticate(Role.CLIENT), (req, res) =>
+router.get('/:orderId', checkTokenBlacklist, authenticate('GENERAL'), (req, res) =>
   orderController.findById(req, res),
 );
 

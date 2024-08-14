@@ -19,4 +19,5 @@ export interface ProductRepository {
   ): Promise<Pagination<ProductEntity>>;
   // Sell methods
   addToCart(productId: number, userId: number, quantity: number): Promise<any>;
+  showUserCart(userId: number): Promise<any[]>;
 }

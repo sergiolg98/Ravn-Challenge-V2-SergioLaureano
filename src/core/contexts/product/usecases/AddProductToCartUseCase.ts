@@ -21,7 +21,8 @@ export class AddProductToCartUseCase {
     const isActive = await this.productRepository.checkIfActive(productId);
     if (!isActive) throw new BadRequestError(`Product disabled. Cannot be added to the cart.`);
 
-    const productCreated = await this.productRepository.addToCart(productId, userId, quantity);
-    return productCreated;
+    await this.productRepository.addToCart(productId, userId, quantity);
+    const userCart = this.productRepository.showUserCart(userId);
+    return userCart;
   }
 }
