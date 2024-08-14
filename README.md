@@ -48,4 +48,4 @@ docker-compose down
 
 - We have covered our repositories which carry the most important operations in this project. Here you can see a printscreen of the full coverage results:
 
-![Code coverage](https://i.ibb.co/g9fwH5t/coverage.png)
+![Code coverage](https://i.ibb.co/JypBr5s/coverage-ravn-challenge-sergio.png)
